@@ -1,0 +1,5 @@
+#!/bin/sh
+
+/home/nyquist/bin/hidden/oproj/oproj.py
+xdotool keydown Shift Insert keyup Shift Insert
+# kill -9 $PPID

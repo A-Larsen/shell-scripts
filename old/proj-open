@@ -1,0 +1,14 @@
+#!/bin/sh
+
+proj=$(ls /home/nyquist/Desktop/Projects | dmenu -fn 'Ubuntu Mono:bold:pixelsize=20' -p 'Project')
+
+proj_dir="/home/nyquist/Desktop/Projects/$proj"
+
+cd /home/nyquist/.vim_runtime/
+sudo cp /etc/proj_vim_configs/$proj .
+sudo mv $proj my_configs.vim
+
+urxvt -e sh -c "cd $proj_dir && stty -ixon && sudo vim; bash"
+
+
+

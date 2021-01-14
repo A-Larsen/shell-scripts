@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "$1" > /home/nyquist/.config/i3blocks/message
+if [ "$3" = "-s" ];
+then
+    sleep $2
+    echo "" > /home/nyquist/.config/i3blocks/message
+fi
+

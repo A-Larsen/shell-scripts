@@ -1,0 +1,32 @@
+#!/bin/bash
+
+function placedata(){
+    sudo cp -R "$1" "$hstdir"
+}
+
+dirItems=($(ls -A))
+timestamp=$(date +"%Y-%d-%mT%H:%M:%S")
+hstname=".old"
+hstdir="$hstname"/"[$timestamp]"
+
+if [[ ! -d "$hstname" ]]; then
+    mkdir "$hstname"
+fi
+
+mkdir "$hstdir"
+
+if (( $# > 0 )); then
+    for data in $@; do
+        if [[ "$data" != "$hstname" ]]; then
+            placedata "$data"
+        else
+            echo "cannot copy $hstname"
+        fi
+    done
+else
+    for data in ${dirItems[@]}; do
+        if [[ "$data" != "$hstname" ]]; then
+            placedata "$data"
+        fi
+    done
+fi

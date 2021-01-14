@@ -1,0 +1,46 @@
+#!/bin/sh
+
+dir=$(echo "" | dmenu -fn 'Ubuntu Mono:bold:pixelsize=20' -p 'Directory')
+if [ ! -d "$dir" ]; then
+    echo "cannot find file"
+    exit 1
+fi
+
+dwmdir=/var/tmp/dwm
+idfile=$dwmdir/ref_id
+
+if [ ! -d $dwmdir ]; then
+    mkdir $dwmdir
+fi
+
+if [ ! -f $idfile ]; then
+    touch $idfile
+    echo "0" > $idfile
+fi
+
+id=$(cat $idfile)
+
+if (( id < 9)); then
+    sudo echo $((id+=1)) > $idfile
+    xdotool \
+        keydown Super_L comma \
+        keyup Super_L comma \
+        keydown Super_L $id \
+        keyup Super_L $id  
+
+    urxvt -title "REFRENCE: ${1##*/}" -e sh -c "cd '$dir'; bash" & 
+    # did "ln -s .Xdefaults ROOTDIR"
+    # for this to work right
+    sleep .1
+
+    xdotool \
+        key Return \
+        keydown Super_L comma \
+        keyup Super_L comma 
+    echo "sent to tag $id"
+
+
+else
+    echo "all tags used"
+fi
+

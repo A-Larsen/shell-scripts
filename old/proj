@@ -1,0 +1,57 @@
+#!/bin/sh
+
+proj_dir="/home/nyquist/Desktop/Projects"
+
+if [ "$1" = "new" ];
+then
+    if [ -L "$proj_dir/${PWD##*/}" ]; # ${PWD##*/} is parameter expansion
+    then
+        echo "updating project"
+        elif [ -z "$2" ];
+        then
+            sudo ln -s $(pwd) $proj_dir/${PWD##*/}
+            echo "directory has been linked to you Projects"
+        else
+            sudo mkdir $2
+            cd $2
+            sudo ln -s $(pwd) $proj_dir/$2
+            echo "directory has been linked to you Projects"
+    fi
+
+    proj=${PWD##*/}
+    cd /etc/proj_vim_configs
+    sudo cp /home/nyquist/.vim_runtime/my_configs.vim .
+    sudo mv my_configs.vim $proj
+
+
+elif [ "$1" = "uln" ];
+then
+    if  [ -d "$proj_dir/${PWD##*/}" ];
+    then
+        sudo rm -R $proj_dir/${PWD##*/}
+        echo "directory has been UN-linked to you Projects"
+    fi
+
+
+elif [ "$1" = "rm" ];
+then
+    if [ -d "$proj_dir/$2" ];
+    then
+        sudo rm -R "$(readlink $proj_dir/$2)"
+        sudo unlink $proj_dir/$2
+        break
+    fi
+
+
+elif [ "$1" = "clone" ];
+    then
+        echo -n "clone " ${PWD##*/} " name: "
+        read name
+        sudo mkdir ../$name
+        sudo cp -R $(ls) ../$name
+        sudo unlink $proj_dir/${PWD##*/}
+        cd ../$name
+        sudo ln -s $(pwd) $proj_dir/$name
+    else
+        echo "this is not a project or no longer a project"
+fi

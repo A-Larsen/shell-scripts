@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if [ ! -f "$1" ]; then
+    echo "cannot find file"
+    exit 1
+fi
+
+xdotool \
+    keydown Super_L comma \
+    keyup Super_L comma \
+    keydown Super_L $2 \
+    keyup Super_L $2  
+
+urxvt -title "REFRENCE: ${1##*/}" -e sh -c "sudo vim '$1'; bash" & 
+# did "ln -s .Xdefaults ROOTDIR"
+# for this to work right
+sleep .1
+
+xdotool \
+    key Return \
+    key -delay 1 comma n f \
+    p C c d \
+    comma n n \
+    keydown Super_L comma \
+    keyup Super_L comma 
+
+echo "sent to tag $2"
+

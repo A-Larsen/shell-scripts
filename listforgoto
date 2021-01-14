@@ -1,0 +1,21 @@
+#!/usr/bin/sh
+
+. /home/nyquist/.shell_sources/colors
+
+for i in $(ls -1A); do
+	if [[ -d "$i" ]]; then
+		echo -en "${BLUEFG}"
+	fi
+
+	if [[ -L "$i" ]]; then
+		echo -en "${GREENFG}"
+	fi
+
+	if [[ -d "$i" ]]; then
+		echo -en "${BLUEFG}"
+	fi
+
+	echo ${PWD}/${i}
+
+	echo -en "${DEFAULTFG}"
+done

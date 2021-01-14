@@ -1,0 +1,25 @@
+#!/bin/bash
+cd /etc/shGraph
+
+if [ "$1" = "-v" ];
+then
+    if [ $# -eq 1 ];
+    then
+        echo "const sortType = ['values', 'descend'];" >  sortType.js
+    else
+        echo "const sortType = ['$2', '$3'];" >  sortType.js
+    fi
+    sudo surf index.html & disown
+fi
+
+
+if [ "$1" = "-w" ];
+then
+    sudo ./build $2 $3
+fi
+
+if [ "$1" = "clear" ];
+then
+    sudo echo "let dbMap = new Map;" > db.js
+    sudo echo "" > names.log
+fi

@@ -1,0 +1,139 @@
+#!/usr/bin/env node
+const config = require('/home/nyquist/.config/CLIchromebookmarks/config.js')
+const fs = require('fs');
+
+function errorLog(err){
+    console.error(err);
+    process.exit();
+}
+
+let bookLog = new Map;
+let Chrome_Bookmarks = {};
+let index = -1;
+let output = '';
+let consoleOutput;
+let {argv} = process;
+let options = new Map;
+options.set("quit", false);
+
+argv.shift();
+argv.shift();
+
+if(argv.length > 2){
+    for(let i = 0; i < argv.length - 1; i++){
+        function so1(type){
+            argv.shift();
+            options.set(type, true);
+            i--;
+        }
+
+        function soa3(type){
+            argv.shift();
+            options.set(type,
+                {
+                path: argv[i],
+                template: argv[i + 1],
+                type: argv[i + 2]
+                }
+            );
+            argv.shift();
+            argv.shift();
+            argv.shift();
+            i-=4;
+        }
+
+        if(argv[i] == "-o"){
+            soa3("output");
+        }else if(argv[i] == "-q"){
+            so1("quit");
+        }
+    }
+}
+
+fs.readFile(config.path, 'utf8', (err, file) => {
+        Chrome_Bookmarks = JSON.parse(file);
+        let Bookmarks = Chrome_Bookmarks.roots.bookmark_bar.children;
+
+        Bookmarks.forEach(bookmark => {
+            if(bookmark.children){
+                bookmark.children.forEach(parent => {
+
+                    if(argv[0] === "regex"){
+                        Object.entries(parent).forEach(entry => {
+
+                            query = argv[1].trim(); let regex = new RegExp(`${query}`,'gi');
+
+                            if(regex.test(entry[1])){
+                                index++;
+                                bookLog.set(index, {url: parent.url, name: parent.name});
+                            }
+                        })
+                    }else if(argv[0] === "folder"){
+                        if(bookmark.name === argv[1]){
+                            if(!argv[2]){
+                                if(parent.type === "url"){
+                                    index++;
+                                    bookLog.set(index, {url: parent.url, name: parent.name});
+                                }
+                            }else if(parent.type === "folder" && parent.name === argv[2]){
+                                parent.children.forEach(child => {
+                                    index++;
+                                    bookLog.set(index, {url: child.url, name: child.name});
+                                })
+                            } // !argv[2]
+                        } //if bookmark.name == argv[1]
+                    }else { //if argv[0] == "f"
+                        errorLog("incorrect arguments");
+                    }
+                })
+            } //if bookmark.children
+        }) //Bookmarks loop
+            if(index > -1){
+                let output = options.get("output");
+                function ParseTemplate(string, info, idx){
+                    if(string[string.indexOf("%i") - 1] != "\\"){
+                        string = string.replace("%i", `${idx}`);
+                    }else{
+                        string = string.replace("\\%i", `%i`);
+                    }
+                    if(string[string.indexOf("%u") - 1] != "\\"){
+                        string = string.replace("%u", `${info.url}`);
+                    }else{
+                        string = string.replace("\\%u", `%u`);
+                    }
+                    if(string[string.indexOf("%n") - 1] != "\\"){
+                        string = string.replace("%n", `${info.name}`);
+                    }else{
+                        string = string.replace("\\%n", "%n");
+                    }
+                    if(string[string.indexOf(" \\n") - 1] != "/"){
+                        string = string.replace("\\n", "\n");
+                    }else{
+                        string = string.replace("/\\n", "\\n");
+                    }
+                    return `${string}\n`;
+                }
+                bookLog.forEach((info, idx) => {
+                    if((options.get("output") && options.get("output").type == "all")){
+                        if(idx == 0){
+                            fs.writeFile(output.path, "", err => {
+                                if(err) console.log(err);
+                            })
+                        }
+
+                        let template = ParseTemplate(output.template, info, idx);
+                        fs.appendFile(output.path, template, err => {
+                            if(err) console.log(err);
+                        })
+
+                    }
+                    if(!options.get("quit") || (options.get("output") && options.get("output").type == "indexed")){
+                        console.log(`${idx}: ${info.name}\n${info.url}\n`);
+                    }
+
+                })
+
+            }else{
+                errorLog("no results\n");
+            }
+}) //read bookmarks

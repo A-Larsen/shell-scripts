@@ -1,0 +1,20 @@
+#!/bin/bash
+
+amixer -q -D pulse sset Master off
+# feh --bg-fill /home/nyquist/Pictures/wallpapers/bf6f697e0eeb6596a1415e31f3e4c1fb.jpg 
+# feh --bg-fill "/home/nyquist/Pictures/wallpapers/125607.jpg"
+# feh --bg-fill "/home/nyquist/Pictures/wallpapers/cyberpunk.jpg"
+feh --bg-fill "/home/nyquist/Pictures/wallpapers/62611-landscape-nature-river-bridge-reflection-stones.jpg"
+
+redshift -O 4000 
+compton --config /home/nyquist/.config/compton/compton.conf &
+# there is a more appropriate way to 
+# map with xmodmap than this
+# xmodmap -e "keycode 121=Insert" &
+urxvtd &
+# clear_vtemp
+
+while true; do
+	xsetroot -name " 🕒 [ $(date '+%I:%M') ]  🛢 [ $(cat /sys/class/power_supply/BAT0/capacity) ] "
+    sleep 1
+done &

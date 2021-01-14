@@ -1,0 +1,16 @@
+#!/bin/sh
+
+urxvt \
+    -cr $3 \
+    -bg $3 \
+    -fg $4 \
+    -title 'popup' \
+    -fn \
+        " \
+        xft:Dejavu Sans Mono:pixelsize=18, \
+        xft:Noto Emoji, \
+        xft: Noto Fonts \
+        " \
+    -e sh \
+    -c "echo \"$1\" && sleep $2"
+

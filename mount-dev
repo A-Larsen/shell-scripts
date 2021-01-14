@@ -1,0 +1,23 @@
+#!/bin/sh
+
+cd /dev
+dev=$(
+    ls sd[a-z][0-9] | \
+    grep -v sda | \
+    dmenu -b -fn 'Ubuntu Mono:bold:pixelsize=20' \
+    -p 'device' \
+    -sb '#996633'
+)
+
+dir="/mnt/$dev"
+
+if [ $dev != null ]; then
+    if ! grep -q "/mnt/$dev" /proc/mounts; then
+        sudo mount /dev/$dev /mnt/$dev
+        notify-send -t 1000 "$dev mounted" -i /usr/share/icons/Adwaita/48x48/legacy/emblem-default.png
+    else
+        sudo umount /mnt/$dev
+        notify-send -t 1000 "$dev can be removed" -i /usr/share/icons/Adwaita/48x48/legacy/emblem-downloads.png
+    fi
+fi
+

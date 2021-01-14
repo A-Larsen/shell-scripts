@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# type=(*.*)
+
+# ls -1 ?
+
+cd "$1"
+type=(*.*)
+# type=$(find . -maxdepth 1 -type f | grep -e '.\+\..\+')
+
+clear
+
+            # *.c)   gcc -lnyqreg -lnyqdna -lm tst.c -o tst && ./tst;;
+            # *.c)   gcc -lm tst.c -o tst && ./tst;;
+            # *.c)   gcc tst.c && ./a.out && echo hello;;
+for file in ${type[@]}; do
+	# echo $file
+    # if [[ "$file" =~ ^./tst. ]]; then
+    if [[ "$file" =~ ^tst ]]; then
+        case $file in
+            *.cpp) 
+				g++ tst.cpp -o tst 
+				./tst
+			;;
+
+             *.c)
+				gcc -lm -lbsd -Wall -Wextra tst.c
+				./a.out
+				exit
+			;;
+
+            *.js)  
+				./tst.js
+				exit
+			;;
+
+            *.py)  
+				./tst.py 
+				exit
+			;;
+
+            *.pl)
+				LANG=C ./tst.pl
+				exit
+			;;
+
+            *.sh)  
+				./tst.sh 
+				exit
+			;;
+
+			*.kts)
+				kotlinc -script "${1}/${file}"
+				exit
+			;;
+
+			*.java)
+				javac tst.java
+				java tst
+			;;
+
+			# *.kt)  
+			# 		kotlinc tst.kt -include-runtime -d tst.jar 
+			# 		java -jar tst.jar
+			# 		exit
+			# ;;
+
+
+        esac
+
+    fi
+done

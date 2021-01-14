@@ -1,0 +1,4 @@
+#!/bin/sh
+
+wine /mnt/terry/FLstudio/FL64.exe
+

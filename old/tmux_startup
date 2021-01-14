@@ -1,0 +1,11 @@
+#!/usr/bin/sh
+
+# eval "set -o vi"
+
+while true; do
+	tmux set \
+		-g \
+		status-right \
+		"time: [$(date +'%I:%M')]  bat: [$(cat /sys/class/power_supply/BAT0/capacity)] "
+	sleep 5
+done &

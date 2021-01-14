@@ -1,0 +1,38 @@
+#!/bin/bash
+
+clear
+
+mvfiles(){
+    for file in $1; do
+        # filetype=$(cut -d. -f2 <<< "$1")
+        # I do not beleive that herestrings '<<<' create subshells
+        # cp $file /home/nyquist/Development/$filetype/$2
+        filetype=${1##*.};
+        mkdir /home/nyquist/Development/$filetype/$2
+        sudo cp -R * /home/nyquist/Development/$filetype/$2
+    done
+}
+
+tstdir=/home/nyquist/Development/tst
+
+pattern=\
+"[cpp|c|js|py|pl|sh]"
+
+if [[ $PWD =~ ${tstdir}/${pattern} ]]; then
+# echo -n "name: " 
+# read name
+
+type=(*.*)
+    for file in ${type[@]}; do
+        case $file in
+            *.cpp) mvfiles *.cpp $1;;
+            *.c)   mvfiles *.c $1;;
+            *.js)  mvfiles *.js $1;;
+            *.py)  mvfiles *.py $1;;
+            *.pl)  mvfiles *.pl $1;;
+            *.sh)  mvfiles *.sh $1;;
+        esac
+    done
+else
+    echo "not a tst directory"
+fi

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+file=/sys/class/backlight/amdgpu_bl0/brightness
+current=$(cat $file)
+
+case $1 in
+    up)   let new=(current+$2);;
+    down) let new=(current-$2);;
+    *)    let new=(current);;
+esac
+
+sudo echo $new > $file

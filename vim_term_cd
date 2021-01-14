@@ -1,0 +1,5 @@
+#!/usr/bin/sh
+
+xdotool key Control+w N comma t n colon c d space type "$PWD"
+xdotool key Return
+xdotool key comma n n C D

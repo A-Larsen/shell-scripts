@@ -1,0 +1,6 @@
+#!/usr/bin/sh
+
+cd /home/nyquist/.config/dwm
+sudo rm -rf config.h
+sudo make && sudo make clean install
+killall dwm

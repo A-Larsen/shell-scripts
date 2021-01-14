@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 0 7600 4750
+
+# {
+# ~/games/osu && xdotool search --name "osu\!lazer" windowsize 1600 900
+# # u && xdotool search --name "osu\!lazer" windowmove 0 0
+# } ||
+# xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 0 15200 9500
+# {
+# ~/games/osu 
+# sleep 10
+# xdotool search --name "osu\!lazer" windowsize 1600 900
+# # u && xdotool search --name "osu\!lazer" windowmove 0 0
+# } ||
+
+
+# if [ "$1" == "on" ]; then
+# 	xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 0 7600 4750
+# 	xdotool search --name "osu\!lazer" windowsize 1600 900
+# 	xdotool search --name "osu\!lazer" windomove 0 0
+
+# fi
+
+case $1 in 
+	"on")
+		xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 0 7600 4750
+		# xdotool search --name "osu\!lazer" windowsize 1600 900
+		xdotool search --name "osu\!lazer" windowsize 1280 800
+		xdotool search --name "osu\!lazer" windowmove 0 0
+	;;
+
+	"off")
+		xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 0 15200 9500
+	;;
+esac

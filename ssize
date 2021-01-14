@@ -1,0 +1,38 @@
+#!/bin/bash
+
+shopt -s extglob #! allows !() for excluding specific files
+. /home/nyquist/.shell_sources/functions
+
+if [[ "$1" == "d" ]]; then
+     item=$(alldirs)
+elif [[ "$1" == "f" ]]; then
+     item=$(allfiles)
+fi
+
+if [[ -z "${item}" ]]; then
+	echo "not found"
+	exit 0;
+fi
+
+ item_and_size=$(sort -nr <(doas du -s $item))
+
+let  i=0
+
+for data in ${item_and_size}; do
+    if (( i == 0 )); then
+         gap=${#data}
+    fi
+
+    if (( i%2 == 0 )); then
+        echo -n "$data"
+         strlen=${#data}
+    else
+        lstart=$(( (gap - strlen) + 1 ))
+        while (( lstart-- )); do
+            echo -n " "
+        done
+
+        echo "$data"
+    fi
+    let  i++
+done

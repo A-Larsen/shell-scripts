@@ -1,0 +1,5 @@
+#!/usr/bin/sh
+
+cd /home/nyquist/.config/dwm
+rm -rf config.h
+make && sudo make clean install

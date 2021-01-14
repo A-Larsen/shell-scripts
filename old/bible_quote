@@ -1,0 +1,38 @@
+#!/usr/bin/bash
+
+output=""
+unparsed="$(bible $1)"
+
+idx=0
+
+len=$((${#unparsed}+1))
+
+charlen=0
+while read -r line; do
+	linelen=${#line}
+
+ 	if ((idx > 2)); then
+		if [[ "$idx"  == "3" ]]; then
+			parsed=$(echo "$line" | sed "s/^[[:digit:]]* //")
+			output+="\"$parsed " 
+			unset parsed
+		else
+			# echo -n "$line"
+			output+="$line"
+		fi
+	fi
+
+	
+	((charlen+=linelen+1))
+
+	[[ "$charlen"  == "$len" ]] &&
+		output+="\""
+
+	((idx++))
+
+	[[ "$linelen" == "0" ]] && 
+	((charlen+=1))
+done <<<"$unparsed"
+
+echo "$output" | fmt -w62 | sed 's/^/        /'
+

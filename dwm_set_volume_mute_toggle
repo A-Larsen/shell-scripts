@@ -1,0 +1,4 @@
+#!/bin/sh
+amixer -q -D pulse sset Master toggle
+volume_info=$(amixer -D pulse sget Master | grep "Front Left:" | cut -b 36-42)
+xsetroot -name " volume: $volume_info"

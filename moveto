@@ -1,0 +1,7 @@
+#!/bin/bash
+
+shopt -s extglob #! allows !() for excluding specific files
+
+sudo mkdir $1
+sudo mv !($1) $1
+sudo cd $1

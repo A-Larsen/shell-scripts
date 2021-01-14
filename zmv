@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+autoload zmv
+zmv $1 $2
+
+# ex. 
+# remove .txt from all files in directory
+# zmv "(*).txt" "\$1"

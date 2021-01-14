@@ -1,0 +1,61 @@
+#!/bin/bash
+
+templatePath=/home/nyquist/Development/tst/templates/
+
+function initFile(){
+    sudo cat ${templatePath}"$1"/"$2" > tst."$1"
+    sudo chmod +x tst."$1"
+}
+
+if (( $# > 0 )); then
+    while (( $# != 0 )); do
+        case $1 in
+            -n)
+                echo "-n option"
+                shift
+            ;;
+            py|c|cpp|js|sh|pl)
+                break
+            ;;
+            *)
+                echo "argument ${1} is not valid"
+                exit 1
+            ;;
+        esac
+    done
+else
+    echo "arguments are required"
+    exit 2
+fi
+
+#get exit statuses and handle errors/exceptions
+declare -A exceptions
+
+[[ -f ${templatePath}${1}/${2} ]]; exceptions["template-does-not-exist"]=$?
+
+[[ ! -z "$2" ]]; exceptions["no-template-argument"]=$?
+
+for throw in ${!exceptions[@]}; do
+    if [[ ${exceptions[$throw]} == "1" ]]; then
+        initFile $1 basic
+
+        case $throw in
+            template-does-not-exist)
+                printf "\
+template does not exist\n\
+using basic template instead\n"
+                exit 3
+            ;;
+            no-template-argument)
+                # : #apperantly the same as pass in python
+                exit 4
+            ;;
+            *)
+                echo "an error has occured"
+                exit 5
+            ;;
+        esac
+    fi
+done
+
+initFile $1 $2

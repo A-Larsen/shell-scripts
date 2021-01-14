@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# maybe learn groff for
+# writing journals
+
+timestamp=$(date +"%m/%d/%Y")
+
+echo "\
+            create on $timestamp
+--------------------------------------------
+" > $1
+

@@ -1,0 +1,151 @@
+#!/bin/bash
+
+##############################
+#changable user variables
+##############################
+backup_dir=/mnt/sdb1
+current_user=nyquist
+##############################
+
+. /home/nyquist/.bash_sources/bash_colors
+_backup_dir=${backup_dir%/}/.backup
+my_dir=/home/$current_user
+my_dir_parsed=\/home\/$current_user
+isprompt="no"
+err=0
+
+function dir_err(){
+    echo -e "$1 ${REDFG}ERROR: $2${DEFAULTFG}"
+    err=1
+}
+
+function backup(){
+        err=0
+        if [[ $1 =~ ^/home/$current_user ]]; then
+            if [[ ! ( -d $1 || -f $1 ) ]]; then
+                dir_err $1 "folder or directory does not exist"
+            fi
+        elif [[ ! ( -d $PWD/$1 || -f $PWD/$1 ) ]]; then
+            dir_err $1 "folder or directory does not exist"
+        fi
+
+        if [[ ! -d $_backup_dir ]]; then
+            dir_err $1 "directory doesn't exist"
+        fi
+
+        if [[ $_backup_dir =~ ^/mnt/ ]] && ! grep -q "${_backup_dir%/*}" /proc/mounts; then
+            dir_err "" "device not mounted"
+            exit 1
+        fi
+
+        no_bs_ending=${1%/}
+        if [[ "$no_bs_ending" =~ "/" ]]; then # check if the dir is in the cwd
+            bdir=${no_bs_ending/$my_dir_parsed/} # this matches the first pattern so it's okay
+
+            if [[ $1 =~ ^/home/$current_user ]]; then
+                new_dir=$_backup_dir$bdir
+                to_copy=$1
+            else
+                new_dir=$_backup_dir/$bdir
+                to_copy=$my_dir/$bdir
+            fi
+
+        dir=${new_dir%/*}/
+        else
+            dir=$_backup_dir${PWD/$my_dir_parsed/}
+            new_dir=$dir/$1
+            to_copy=$PWD/$1
+        fi
+
+        if [[ -d "$new_dir" ]] && [[ $2 == "yes" ]]; then
+            echo -en "${LIGHTREDFG}directory $new_dir exists, replace ? ${GREENFG}(y/n/s) "yes/no/skip": "
+
+            read replace
+            if [[ $replace == "n" ]]; then
+                exit
+            fi
+
+            if [[ $replace != "s" ]]; then
+                echo -en "${LIGHTREDFG}remove old content ? ${GREENFG}(y/n) "yes/no": "
+                echo -en "${DEFAULTFG}"
+                read replace
+                if [[ $replace == "y" ]]; then
+                    sudo rm -R $new_dir
+                fi
+            fi
+        fi
+
+        if [[ ! -d $dir ]]; then
+            sudo mkdir -p $dir
+        fi
+
+        if ((!err)); then
+            sudo cp -R "$to_copy" "$dir" 2> /dev/null
+            sudo chown -R  $dir 2> /dev/null
+            printf "$to_copy${DEFAULTFG}\n"
+        fi
+}
+
+function check(){
+    OLDIFS=$IFS
+    IFS=$'\n'
+
+    if [[ "$1" =~ ^$PWD ]]; then
+        search="$1"
+    else
+        search="$PWD/$1"
+    fi
+
+    all=("$(find $search -maxdepth 1 -type d)")
+    all+=("$(find $search -maxdepth 1 -type f)")
+
+    for current_all in ${all[@]}; do
+        if [[ $current_all != "." ]] && [[ ${current_all##*/} != "${search##*/}" ]]; then
+
+            if [[ -d $current_all ]]; then
+                current_dir=$(find $current_all -maxdepth 1 -type d)
+
+
+                for subs in ${current_dir[@]}; do
+                    if [[ "$subs" != "$current_all" ]]; then
+                        diff -q $subs ${subs/$my_dir_parsed/$_backup_dir} | grep "\(^diff\|^Diff\|^Files\)"
+                    fi
+                done
+            else
+                diff -q $current_all $_backup_dir/${current_all/$my_dir_parsed/} | grep "\(^diff\|^Diff\|^Files\)"
+            fi
+        fi
+    done
+
+    IFS=$OLDIFS
+}
+
+# "main"
+if (( $# > 0 )); then
+    for args in $@; do
+        case $args in 
+            -c)
+                check $2
+                exit
+            ;;
+            -d)
+                _backup_dir=$2
+                shift 2
+            ;;
+            -p)
+                isprompt="yes"
+                shift
+            ;;
+        esac
+    done
+    
+    #repeating this loop because I shifted it, I cannot use a shifted array while it is in itteration
+    for args in $@; do
+        backup $args $isprompt
+    done
+
+
+else
+    backup $PWD $isprompt
+fi
+

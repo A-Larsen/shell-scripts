@@ -1,0 +1,3 @@
+#!/bin/sh
+
+urxvt -bg [0]#000000 -cr [0]#000000 -title transparent -fg white -e sh -c 'sleep infinity; bash'

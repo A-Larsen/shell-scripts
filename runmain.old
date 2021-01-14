@@ -1,0 +1,30 @@
+#!/bin/bash
+
+shopt -s nullglob
+
+function get_fd(){
+    allDirs=(*/)
+    allFiles=(*)
+
+    for idx in ${!allFiles[@]}; do
+        for dir in ${allDirs[@]};do
+            element="${allFiles[idx]}/"
+            if [[ $element == $dir ]]; then
+                unset 'allFiles[idx]'
+            fi
+        done
+    done
+}
+
+get_fd
+echo ${allFiles[@]}
+echo ${allDirs[@]}
+
+cd ${allDirs[0]}
+
+get_fd
+echo "${allFiles[@]:1}" 
+# prints from file 1 till the end, 
+# skips file 0
+echo "${allFiles[@]}" 
+echo ${allDirs[@]}

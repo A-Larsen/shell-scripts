@@ -1,0 +1,6 @@
+#!/bin/sh
+amixer -q -D pulse sset Master 1%+
+# volume_info=$(amixer -D pulse sget Master | grep "Front Left:" | cut -d"[" -f2)
+volume_info=$(amixer -D pulse sget Master | grep "Front Left:" | cut -b 30-35)
+xsetroot -name " volume: $volume_info"
+

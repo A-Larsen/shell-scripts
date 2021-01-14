@@ -1,0 +1,8 @@
+testing="this is a test"
+
+# to source form any directory
+# $ source sourceTesting 
+# or
+# $ . sourceTesting
+# testing variable will now be available
+# $ echo $testing

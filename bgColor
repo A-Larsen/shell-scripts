@@ -1,0 +1,19 @@
+#!/bin/sh
+
+trns=100
+
+for opt in $@; do
+    case $opt in
+        -t)trns=80; shift 1;;
+    esac
+done
+
+case $1 in
+    0) echo -e "\033]11;[$trns]#333333\007";;
+    1) echo -e "\033]11;[$trns]#2f271e\007";;
+    2) echo -e "\033]11;[$trns]#263238\007";;
+    3) echo -e "\033]11;[$trns]#282c34\007";;
+    4) echo -e "\033]11;[$trns]#292c2f\007";;
+    5) echo -e "\033]11;[$trns]#1f1a14\007";;
+    6) echo -e "\033]11;[$trns]#202735\007";;
+esac

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for tmp in .viminf{a..z}.tmp 
+do
+    if [ -f /root/"$tmp" ];
+    then
+        sudo rm /root/"$tmp"
+    fi
+    
+    if [ -f /home/nyquist/"$tmp" ];
+    then
+        sudo rm /home/nyquist/"$tmp"
+    fi
+done

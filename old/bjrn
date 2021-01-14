@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+
+cd /home/nyquist/Documents/bible/
+
+file=$(date +"%m-%d-%y")
+
+allfiles=($(find -type f | sort -k1 -k2 -k3))
+
+# vim -c "e $file" ${allfiles[@]: -4:4}
+vim --remote-tab $file
+
+echo ""

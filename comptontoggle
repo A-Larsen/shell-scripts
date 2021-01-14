@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if pidof compton; then
+    killall compton
+else
+    compton --config /home/nyquist/.config/compton/compton.conf
+fi

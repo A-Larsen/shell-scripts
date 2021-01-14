@@ -1,0 +1,7 @@
+#!/bin/bash
+
+maindir=$(find . -name "main.*")
+filetype=${maindir##*.}
+
+echo "opening $filetype file"
+$maindir

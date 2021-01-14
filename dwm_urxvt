@@ -1,0 +1,8 @@
+#!/usr/bin/sh
+
+# urxvtc -title "-V-I-M-" --meta8 -e bash -c "stty -ixon && vim -c 'TermOnly'" 
+# urxvtc -title "-V-I-M-" --meta8 -e bash -c "stty -ixon && vim --servername vim -c 'TermOnly'" 
+# urxvtc -title "-V-I-M-" 
+# urxvtc -e bash -c "vim --servername vim -c 'TermOnly'"
+urxvtc -e bash -c "stty -ixon && vim --servername vim -c 'VimwikiIndex'"
+# urxvtc -e bash -c "stty -ixon && vim --servername vim -c 'TermOnly'"

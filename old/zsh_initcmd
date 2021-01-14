@@ -1,0 +1,10 @@
+#!/bin/bash
+
+trap '_PS1_timer_start' DEBUG
+
+if [ "$PROMPT_COMMAND" == "" ]; then
+  PROMPT_COMMAND="_PS1_timer_stop"
+else
+  PROMPT_COMMAND+=";_INIT_VARIABLES"
+  PROMPT_COMMAND="$PROMPT_COMMAND; _PS1_timer_stop"
+fi

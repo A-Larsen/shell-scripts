@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo mkdir $1
+cd $1
+sudo mktst "$2" "$3"

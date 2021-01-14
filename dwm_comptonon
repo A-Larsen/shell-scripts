@@ -1,0 +1,3 @@
+#!/bin/sh
+
+compton --config /home/nyquist/.config/compton/compton.conf &

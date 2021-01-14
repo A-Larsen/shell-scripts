@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# feh --bg-fill "/home/nyquist/Pictures/wallpapers/face_explosion_forms_surrealism_57020_2560x1080.jpg"
+feh --bg-fill "/home/nyquist/Pictures/wallpapers/bf6f697e0eeb6596a1415e31f3e4c1fb.jpg"
+# xrandr --output DVI-D-0 --mode 2560x1080 --output HDMI-0 --right-of DVI-D-0 --mode 1920x1080 --rotate right
+# xrandr --output DVI-D-0 --mode 2560x1080 --output HDMI-0 --right-of DVI-D-0 --mode 1920x1080 
+# xrandr --output HDMI-0 DVI-D-0 --mode 1920x1080 
+xrandr --output DVI-D-0 --mode 2560x1080 
+# xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 0 7600 4750
+
+# default
+# xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 0 15200 9500
+urxvtd &
+compton &
+
+
+while true; do
+	xsetroot -name " 🕒 $(date '+%I:%M') "
+    sleep 1m
+done &

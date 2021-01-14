@@ -1,0 +1,15 @@
+#!/bin/bash
+
+file=/sys/class/backlight/amdgpu_bl0/brightness
+current=$(cat $file)
+let new=(0)
+
+case $1 in
+    up)   let new=(current+$2);;
+    down) let new=(current-$2);;
+    *)    let new=(current);;
+esac
+
+# notify-send -t 600 "brightness: ${new}%"
+
+sudo echo "$new" > $file

@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+cmd=$(eval "$1" 2>&1 >/dev/null)
+stamp=$(date)
+
+if [[ ! -z $cmd ]]; then
+	echo "$cmd"
+	echo -e "${stamp}" >> $2
+	echo -e "------------------------------------" >> $2
+	echo -e "${cmd}\n\n" >> $2
+fi

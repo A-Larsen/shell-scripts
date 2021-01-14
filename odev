@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd /etc/myapps/
+./odev.py $1
+sleep .1
+# kill -9 $PPID

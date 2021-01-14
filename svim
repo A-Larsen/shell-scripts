@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+# vim --remote-send "<C-\><C-n>:exec 'tabnew '.expand('<cWORD>')<CR>"
+# vim --remote-send "<C-\><C-n>:call GotoDir(Term.getCWD().\"/\".\"$1\", \"newtab\")<CR>"
+
+dir="$PWD/$1"
+if [[ -f "$dir" ]]; then
+	vim --remote-send "<C-\><C-n>:call GotoDir(\"${dir}\", \"newtab\")<CR>"
+else
+	vim $@
+fi

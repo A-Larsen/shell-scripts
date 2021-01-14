@@ -1,0 +1,85 @@
+#!/bin/bash
+
+cd ~/Development/tst
+templatePath=~/Development/tst/templates/"$1"/
+
+function open(){
+    cd $1
+    cat ${templatePath}/"$2" > tst."$1"
+    chmod +x tst."$1"
+}
+
+# handle options/flags
+if (( $# > 0 )); then
+    while (( $# != 0 )); do
+        case $1 in
+            -n)
+                echo "-n option"
+                shift
+            ;;
+            py|c|cpp|js|sh|pl)
+                break
+            ;;
+            *)
+                echo "argument ${1} is not valid"
+                exit 1
+            ;;
+        esac
+    done
+else
+    echo "arguments are required"
+    exit 2
+fi
+
+case $1 in 
+    js)
+        cd js
+        sudo rm -R  dir1/* 2> /dev/null
+        sudo rm -R  dir2/* 2> /dev/null  
+        sudo rm -R  dir3/* 2> /dev/null   
+        sudo rm -R  node_modules/*  2> /dev/null
+        if [[ $2 == "basic_express" ]]; then
+            sudo npm install --save express
+        fi
+    ;;
+esac
+
+#get exit statuses and handle errors/exceptions
+declare -A exceptions
+
+open_argument2=${2}
+
+[[ -f "${templatePath}/$2" ]]; exceptions["template-does-not-exist"]=$?
+
+[[ ! -z "$2" ]]; exceptions["no-template-argument"]=$?
+
+
+for throw in ${!exceptions[@]}; do
+    if [[ ${exceptions[$throw]} == "1" ]]; then
+
+        case $throw in
+            template-does-not-exist)
+                printf "\
+template does not exist\n\
+using basic template instead\n"
+                read null
+                # open $1 basic
+                open_argument2="basic"
+                break
+            ;;
+            no-template-argument)
+                # : #apperantly the same as pass in python
+                # open $1 basic
+                open_argument2="basic"
+                break
+            ;;
+            *)
+                echo "an error has occured"
+                exit 3
+            ;;
+        esac
+    fi
+done
+
+open $1 ${open_argument2}
+sudo vim tst."$1" 

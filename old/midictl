@@ -1,0 +1,26 @@
+#!/bin/bash
+
+midiout -clear
+proj_num=$(find /home/nyquist/Desktop/Projects -maxdepth 1 -type l | wc -l)
+
+# init midi out
+for note in {11..88};do
+    if ((note - 11 < proj_num)); then
+        midiout $note 15
+    fi
+done
+
+# do something on midi in,
+# inotirywait makes sure something is done
+# only when the file is changed
+inotifywait -q -m -e close_write /dev/midiin/note |
+while read -r filename event; do
+    note=$(cat /dev/midiin/note)
+
+    case $note in 
+        11) urxvt -title selection -e sh -c 'oproj; bash';;
+        12) echo Aaron;;
+        13) echo Austin;;
+    esac
+
+done

@@ -1,0 +1,3 @@
+#!/usr/bin/sh
+
+tabbed -dn tabbed-surf -r 2 surf -e '' "duckduckgo.com"

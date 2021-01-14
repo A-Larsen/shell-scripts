@@ -1,0 +1,17 @@
+#!/bin/bash
+
+cd "$1"
+
+type=(*.*)
+clear
+
+for file in ${type[@]}; do
+    case $file in
+        *.cpp) g++ tst.cpp -o tst && ./tst;;
+        *.c)   gcc -lnyqreg -lnyqdna tst.c -o tst && ./tst;;
+        *.js)  ./tst.js;;
+        *.py)  ./tst.py;;
+        *.pl)  LANG=C ./tst.pl;;
+        *.sh)  ./tst.sh;;
+    esac
+done
